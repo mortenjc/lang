@@ -1,0 +1,15 @@
+/* C comment
+**
+*/
+
+"Before include"
+#include <test1.txt>
+"After include"
+
+// C++ comment
+
+int i = 0;
+
+if (a) i = 2.7;
+
+s = "abc";

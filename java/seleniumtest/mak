@@ -1,0 +1,5 @@
+#CP=selenium/selenium-java-2.31.0.jar:.:selenium/selenium-server-standalone-2.31.0.jar
+CP=.:selenium/selenium-server-standalone-2.31.0.jar
+
+javac -cp $CP SelScr.java || exit
+java -cp $CP SelScr

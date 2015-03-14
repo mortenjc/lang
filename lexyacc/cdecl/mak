@@ -1,0 +1,4 @@
+rm -f lex.* y.* a.out *.o
+flex -l *.l || exit
+bison -d -y -v *.y || exit
+gcc *.c

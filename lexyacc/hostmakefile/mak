@@ -1,0 +1,2 @@
+flex host.l
+gcc lex.yy.c && cat descrip.mms | ./a.out

@@ -1,0 +1,505 @@
+State 0 conflicts: 3 shift/reduce
+
+
+Grammar
+
+    0 $accept: declares $end
+
+    1 declares: /* empty */
+    2         | declare
+    3         | declares declare
+
+    4 declare: field ';'
+    5        | field '=' expr ';'
+
+    6 type: INT
+    7     | CHAR
+    8     | STRUCT '{' fields '}'
+    9     | STRUCT NAME '{' fields '}'
+
+   10 fields: field ';'
+   11       | fields field ';'
+
+   12 varlist: NAME
+   13        | varlist '[' INTEGER ']'
+   14        | varlist ',' varlist
+
+   15 field: type varlist
+
+   16 expr: INTEGER
+   17     | '(' expr ')'
+   18     | expr '+' expr
+   19     | expr '-' expr
+   20     | expr '*' expr
+   21     | expr '/' expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 17
+')' (41) 17
+'*' (42) 20
+'+' (43) 18
+',' (44) 14
+'-' (45) 19
+'/' (47) 21
+';' (59) 4 5 10 11
+'=' (61) 5
+'[' (91) 13
+']' (93) 13
+'{' (123) 8 9
+'}' (125) 8 9
+error (256)
+INT (258) 6
+CHAR (259) 7
+STRUCT (260) 8 9
+INTEGER (261) 13 16
+NAME (262) 9 12
+
+
+Nonterminals, with rules where they appear
+
+$accept (21)
+    on left: 0
+declares (22)
+    on left: 1 2 3, on right: 0 3
+declare (23)
+    on left: 4 5, on right: 2 3
+type (24)
+    on left: 6 7 8 9, on right: 15
+fields (25)
+    on left: 10 11, on right: 8 9 11
+varlist (26)
+    on left: 12 13 14, on right: 13 14 15
+field (27)
+    on left: 15, on right: 4 5 10 11
+expr (28)
+    on left: 16 17 18 19 20 21, on right: 5 17 18 19 20 21
+
+
+state 0
+
+    0 $accept: . declares $end
+
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    STRUCT  shift, and go to state 3
+
+    INT       [reduce using rule 1 (declares)]
+    CHAR      [reduce using rule 1 (declares)]
+    STRUCT    [reduce using rule 1 (declares)]
+    $default  reduce using rule 1 (declares)
+
+    declares  go to state 4
+    declare   go to state 5
+    type      go to state 6
+    field     go to state 7
+
+
+state 1
+
+    6 type: INT .
+
+    $default  reduce using rule 6 (type)
+
+
+state 2
+
+    7 type: CHAR .
+
+    $default  reduce using rule 7 (type)
+
+
+state 3
+
+    8 type: STRUCT . '{' fields '}'
+    9     | STRUCT . NAME '{' fields '}'
+
+    NAME  shift, and go to state 8
+    '{'   shift, and go to state 9
+
+
+state 4
+
+    0 $accept: declares . $end
+    3 declares: declares . declare
+
+    $end    shift, and go to state 10
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    STRUCT  shift, and go to state 3
+
+    declare  go to state 11
+    type     go to state 6
+    field    go to state 7
+
+
+state 5
+
+    2 declares: declare .
+
+    $default  reduce using rule 2 (declares)
+
+
+state 6
+
+   15 field: type . varlist
+
+    NAME  shift, and go to state 12
+
+    varlist  go to state 13
+
+
+state 7
+
+    4 declare: field . ';'
+    5        | field . '=' expr ';'
+
+    ';'  shift, and go to state 14
+    '='  shift, and go to state 15
+
+
+state 8
+
+    9 type: STRUCT NAME . '{' fields '}'
+
+    '{'  shift, and go to state 16
+
+
+state 9
+
+    8 type: STRUCT '{' . fields '}'
+
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    STRUCT  shift, and go to state 3
+
+    type    go to state 6
+    fields  go to state 17
+    field   go to state 18
+
+
+state 10
+
+    0 $accept: declares $end .
+
+    $default  accept
+
+
+state 11
+
+    3 declares: declares declare .
+
+    $default  reduce using rule 3 (declares)
+
+
+state 12
+
+   12 varlist: NAME .
+
+    $default  reduce using rule 12 (varlist)
+
+
+state 13
+
+   13 varlist: varlist . '[' INTEGER ']'
+   14        | varlist . ',' varlist
+   15 field: type varlist .
+
+    ','  shift, and go to state 19
+    '['  shift, and go to state 20
+
+    $default  reduce using rule 15 (field)
+
+
+state 14
+
+    4 declare: field ';' .
+
+    $default  reduce using rule 4 (declare)
+
+
+state 15
+
+    5 declare: field '=' . expr ';'
+
+    INTEGER  shift, and go to state 21
+    '('      shift, and go to state 22
+
+    expr  go to state 23
+
+
+state 16
+
+    9 type: STRUCT NAME '{' . fields '}'
+
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    STRUCT  shift, and go to state 3
+
+    type    go to state 6
+    fields  go to state 24
+    field   go to state 18
+
+
+state 17
+
+    8 type: STRUCT '{' fields . '}'
+   11 fields: fields . field ';'
+
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    STRUCT  shift, and go to state 3
+    '}'     shift, and go to state 25
+
+    type   go to state 6
+    field  go to state 26
+
+
+state 18
+
+   10 fields: field . ';'
+
+    ';'  shift, and go to state 27
+
+
+state 19
+
+   14 varlist: varlist ',' . varlist
+
+    NAME  shift, and go to state 12
+
+    varlist  go to state 28
+
+
+state 20
+
+   13 varlist: varlist '[' . INTEGER ']'
+
+    INTEGER  shift, and go to state 29
+
+
+state 21
+
+   16 expr: INTEGER .
+
+    $default  reduce using rule 16 (expr)
+
+
+state 22
+
+   17 expr: '(' . expr ')'
+
+    INTEGER  shift, and go to state 21
+    '('      shift, and go to state 22
+
+    expr  go to state 30
+
+
+state 23
+
+    5 declare: field '=' expr . ';'
+   18 expr: expr . '+' expr
+   19     | expr . '-' expr
+   20     | expr . '*' expr
+   21     | expr . '/' expr
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    ';'  shift, and go to state 35
+
+
+state 24
+
+    9 type: STRUCT NAME '{' fields . '}'
+   11 fields: fields . field ';'
+
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    STRUCT  shift, and go to state 3
+    '}'     shift, and go to state 36
+
+    type   go to state 6
+    field  go to state 26
+
+
+state 25
+
+    8 type: STRUCT '{' fields '}' .
+
+    $default  reduce using rule 8 (type)
+
+
+state 26
+
+   11 fields: fields field . ';'
+
+    ';'  shift, and go to state 37
+
+
+state 27
+
+   10 fields: field ';' .
+
+    $default  reduce using rule 10 (fields)
+
+
+state 28
+
+   13 varlist: varlist . '[' INTEGER ']'
+   14        | varlist . ',' varlist
+   14        | varlist ',' varlist .
+
+    '['  shift, and go to state 20
+
+    $default  reduce using rule 14 (varlist)
+
+
+state 29
+
+   13 varlist: varlist '[' INTEGER . ']'
+
+    ']'  shift, and go to state 38
+
+
+state 30
+
+   17 expr: '(' expr . ')'
+   18     | expr . '+' expr
+   19     | expr . '-' expr
+   20     | expr . '*' expr
+   21     | expr . '/' expr
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    ')'  shift, and go to state 39
+
+
+state 31
+
+   18 expr: expr '+' . expr
+
+    INTEGER  shift, and go to state 21
+    '('      shift, and go to state 22
+
+    expr  go to state 40
+
+
+state 32
+
+   19 expr: expr '-' . expr
+
+    INTEGER  shift, and go to state 21
+    '('      shift, and go to state 22
+
+    expr  go to state 41
+
+
+state 33
+
+   20 expr: expr '*' . expr
+
+    INTEGER  shift, and go to state 21
+    '('      shift, and go to state 22
+
+    expr  go to state 42
+
+
+state 34
+
+   21 expr: expr '/' . expr
+
+    INTEGER  shift, and go to state 21
+    '('      shift, and go to state 22
+
+    expr  go to state 43
+
+
+state 35
+
+    5 declare: field '=' expr ';' .
+
+    $default  reduce using rule 5 (declare)
+
+
+state 36
+
+    9 type: STRUCT NAME '{' fields '}' .
+
+    $default  reduce using rule 9 (type)
+
+
+state 37
+
+   11 fields: fields field ';' .
+
+    $default  reduce using rule 11 (fields)
+
+
+state 38
+
+   13 varlist: varlist '[' INTEGER ']' .
+
+    $default  reduce using rule 13 (varlist)
+
+
+state 39
+
+   17 expr: '(' expr ')' .
+
+    $default  reduce using rule 17 (expr)
+
+
+state 40
+
+   18 expr: expr . '+' expr
+   18     | expr '+' expr .
+   19     | expr . '-' expr
+   20     | expr . '*' expr
+   21     | expr . '/' expr
+
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+
+    $default  reduce using rule 18 (expr)
+
+
+state 41
+
+   18 expr: expr . '+' expr
+   19     | expr . '-' expr
+   19     | expr '-' expr .
+   20     | expr . '*' expr
+   21     | expr . '/' expr
+
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+
+    $default  reduce using rule 19 (expr)
+
+
+state 42
+
+   18 expr: expr . '+' expr
+   19     | expr . '-' expr
+   20     | expr . '*' expr
+   20     | expr '*' expr .
+   21     | expr . '/' expr
+
+    $default  reduce using rule 20 (expr)
+
+
+state 43
+
+   18 expr: expr . '+' expr
+   19     | expr . '-' expr
+   20     | expr . '*' expr
+   21     | expr . '/' expr
+   21     | expr '/' expr .
+
+    $default  reduce using rule 21 (expr)

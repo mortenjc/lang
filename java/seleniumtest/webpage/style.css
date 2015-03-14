@@ -1,0 +1,10 @@
+html {height:100%;}
+body {height:100%;}
+
+img.normal {height:auto;}
+img.big {width:20%;}
+img.small {width:10%;}
+
+.myTable { background-color:#FFFFE0;border-collapse:collapse; }
+.myTable th { background-color:#BDB76B;color:white; }
+.myTable td, .myTable th { padding:5px;border:1px solid #BDB76B; }

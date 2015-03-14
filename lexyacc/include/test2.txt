@@ -1,0 +1,5 @@
+
+"Before include"
+#include<test2.txt>
+
+"After include"

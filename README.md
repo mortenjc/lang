@@ -1,2 +1,0 @@
-# lang
-misc programming languages

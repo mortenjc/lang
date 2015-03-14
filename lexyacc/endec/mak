@@ -1,0 +1,4 @@
+rm -f *.c *.output a.out
+flex -l endec.l
+bison -d -y -v endec.y
+gcc *.c

@@ -1,0 +1,2 @@
+
+((:|TITLE| "Hello Again" :|ARTIST| "Gyle" :|RATING| 7. :|RIPPED| |COMMON-LISP|::|T|) (:|TITLE| "Hello" :|ARTIST| "Morten" :|RATING| 2. :|RIPPED| |COMMON-LISP|::|NIL|)) 

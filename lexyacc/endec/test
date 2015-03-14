@@ -1,0 +1,30 @@
+
+
+
+message xyz
+{
+    integer gylle1
+
+    integer aylle2
+    float   fnyt
+}
+
+message xyz2
+{
+    integer gylle3
+    integer aylle4
+}
+
+message xyz2
+{
+    integer gylle5
+    integer aylle6
+    message bop
+    {
+        float a
+    }
+}
+
+message abc 
+{
+}

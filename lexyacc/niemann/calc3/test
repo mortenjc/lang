@@ -1,0 +1,28 @@
+/* 
+ * C kommentar 
+ */
+ ;
+ ;
+ ;
+b=0b10;
+d=100;
+h=0x10;
+
+print "Start";
+
+while (i<h)  // Cpp kommentar
+{
+   if (i== 4)
+   {
+      print "Hurrah";
+      b++;
+   }
+   print i++;
+}
+
+print "Mere test";
+
+print b;
+print d;
+print h;
+

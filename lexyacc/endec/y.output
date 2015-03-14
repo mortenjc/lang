@@ -1,0 +1,185 @@
+Grammar
+
+    0 $accept: interface $end
+
+    1 interface: interface statement
+    2          | /* empty */
+
+    3 @1: /* empty */
+
+    4 statement: MESSAGE NAME @1 '{' dec_list '}'
+
+    5 dec_list: decl
+    6         | dec_list decl
+
+    7 decl: INTEGER NAME
+    8     | FLOAT NAME
+    9     | statement
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'{' (123) 4
+'}' (125) 4
+error (256)
+INTEGER (258) 7
+MESSAGE (259) 4
+FLOAT (260) 8
+NAME (261) 4 7 8
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+interface (10)
+    on left: 1 2, on right: 0 1
+statement (11)
+    on left: 4, on right: 1 9
+@1 (12)
+    on left: 3, on right: 4
+dec_list (13)
+    on left: 5 6, on right: 4 6
+decl (14)
+    on left: 7 8 9, on right: 5 6
+
+
+state 0
+
+    0 $accept: . interface $end
+
+    $default  reduce using rule 2 (interface)
+
+    interface  go to state 1
+
+
+state 1
+
+    0 $accept: interface . $end
+    1 interface: interface . statement
+
+    $end     shift, and go to state 2
+    MESSAGE  shift, and go to state 3
+
+    statement  go to state 4
+
+
+state 2
+
+    0 $accept: interface $end .
+
+    $default  accept
+
+
+state 3
+
+    4 statement: MESSAGE . NAME @1 '{' dec_list '}'
+
+    NAME  shift, and go to state 5
+
+
+state 4
+
+    1 interface: interface statement .
+
+    $default  reduce using rule 1 (interface)
+
+
+state 5
+
+    4 statement: MESSAGE NAME . @1 '{' dec_list '}'
+
+    $default  reduce using rule 3 (@1)
+
+    @1  go to state 6
+
+
+state 6
+
+    4 statement: MESSAGE NAME @1 . '{' dec_list '}'
+
+    '{'  shift, and go to state 7
+
+
+state 7
+
+    4 statement: MESSAGE NAME @1 '{' . dec_list '}'
+
+    INTEGER  shift, and go to state 8
+    MESSAGE  shift, and go to state 3
+    FLOAT    shift, and go to state 9
+
+    statement  go to state 10
+    dec_list   go to state 11
+    decl       go to state 12
+
+
+state 8
+
+    7 decl: INTEGER . NAME
+
+    NAME  shift, and go to state 13
+
+
+state 9
+
+    8 decl: FLOAT . NAME
+
+    NAME  shift, and go to state 14
+
+
+state 10
+
+    9 decl: statement .
+
+    $default  reduce using rule 9 (decl)
+
+
+state 11
+
+    4 statement: MESSAGE NAME @1 '{' dec_list . '}'
+    6 dec_list: dec_list . decl
+
+    INTEGER  shift, and go to state 8
+    MESSAGE  shift, and go to state 3
+    FLOAT    shift, and go to state 9
+    '}'      shift, and go to state 15
+
+    statement  go to state 10
+    decl       go to state 16
+
+
+state 12
+
+    5 dec_list: decl .
+
+    $default  reduce using rule 5 (dec_list)
+
+
+state 13
+
+    7 decl: INTEGER NAME .
+
+    $default  reduce using rule 7 (decl)
+
+
+state 14
+
+    8 decl: FLOAT NAME .
+
+    $default  reduce using rule 8 (decl)
+
+
+state 15
+
+    4 statement: MESSAGE NAME @1 '{' dec_list '}' .
+
+    $default  reduce using rule 4 (statement)
+
+
+state 16
+
+    6 dec_list: dec_list decl .
+
+    $default  reduce using rule 6 (dec_list)
