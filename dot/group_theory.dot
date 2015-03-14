@@ -1,0 +1,24 @@
+
+digraph G {
+   node [shape=box];
+   C4T1 [label="c4t1(p.37)\nab=ac -> b=c"];
+   C4T2 [label="c4t2(p.37)\nab = e -> a = b^-1"];
+   C4T3 [label="c4t3(p.38)\ninverses of (ab)"];
+
+   C8T1 [label="c8t1(p.82)\nperm.=prod. disjoint cycles"];
+   C8T3 [label="c8t3(p.85)\nperm. is not both odd even"];
+   
+   C9T1 [label="c9t1(p.95)\nall G is isom. to group of perm."];
+
+   C4T2 -> C4T3;
+
+   C4T1 -> C4T2;
+
+   C4T2 -> C9T1;
+   C11T1 -> C11T1;
+ 
+   C10T1 -> C10T2
+
+  
+}
+
