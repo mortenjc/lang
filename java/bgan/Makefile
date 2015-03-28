@@ -3,7 +3,8 @@ BUILD=build
 
 #CP = -classpath .:../jars/junit-4.10.jar:../jars/stdlib.jar
 
-SOURCES = Deque.java Histogram.java MinPQ.java ResizingArrayQueue.java Sim2.java
+#SOURCES = Deque.java MinPQ.java ResizingArrayQueue.java
+SOURCES = Histogram.java Sim2.java
 CLASSES = $(SOURCES:%.java=$(BUILD)/%.class)
 
 Q=@
