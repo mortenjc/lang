@@ -226,6 +226,10 @@ public class Sim2 {
   }
   
   public static void main(String [] args) {
+    if (args.length != 2) {
+        System.out.println("Usage: Sim packets size\n");
+        return;
+    }
     int packets = Integer.parseInt(args[0]);
     int size    = Integer.parseInt(args[1]);
     System.out.println("Packets: " + packets);
@@ -233,5 +237,4 @@ public class Sim2 {
     Sim2 bgan = new Sim2(packets, size);
     bgan.simulate();
   }
-  
 }
