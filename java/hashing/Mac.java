@@ -1,9 +1,14 @@
+import static org.junit.Assert.*;
+import java.util.Random;
 
 public class Mac {
     
     char [] address = new char [6];
     
     public Mac(int i, int j) {
+        assertTrue("0 <= i < 256**3", (i >= 0) && (i < 256*256*256));
+        assertTrue("0 <= j < 256**3", (j >= 0) && (j < 256*256*256));
+
         address[0] = (char)((i >> 16)&0xff);
         address[1] = (char)((i >>  8)&0xff);
         address[2] = (char)( i       &0xff);
@@ -28,6 +33,10 @@ public class Mac {
     public static void main(String[] args)
     {
         Mac mc = new Mac(43234,1);
-        StdOut.println(mc.toString());
+        StdOut.println(mc);
+        mc = new Mac(16777215,1);
+        StdOut.println(mc);
+        mc = new Mac(16777216,1);
+        StdOut.println(mc);
     }
 }

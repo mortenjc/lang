@@ -4,8 +4,8 @@ import java.util.Random;
 public class Sim2 {
   private MinPQ<Event> pq;    // event (priority) queue
   private Deque<Packet> dp;   // 
-  private int N;
-  private int packetsize;
+  private int N;              // number of packets to transmit
+  private int packetsize;     // size of each packet
   ResizingArrayQueue<Packet> rq;
 
   // Stats only
@@ -63,7 +63,7 @@ public class Sim2 {
       t = e.time;
       
       if ((t - deltat) >= 10000000.0) {
-        //System.out.println("Time: "+ t/1000000 + " s");
+        System.out.println("Time: "+ t/1000000 + " s");
         deltat = t;
       }
       
