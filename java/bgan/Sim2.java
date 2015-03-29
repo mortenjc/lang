@@ -42,14 +42,14 @@ public class Sim2 {
   }
   
   public void simulate() { 
+    // incoming packets rate at 256000 bits/s
+    double dt = 1000000.0/(256000.0/(8*packetsize));
+    Random rand = new Random();
     
     // Add initial 20ms schedule at t0 + 20ms
     pq.insert(new Event(t + 20000.0, EventType.RAN_SCHEDULE, maxCapacity, timeSlot++, null));
     
-    // Add incoming packets at 256000 bits/s
-    double dt = 1000000.0/(256000.0/(8*packetsize));
-    Random rand = new Random();
-    
+    // Schedule all packets for transmission
     for (int i = 1; i <= N; i++) {
       double time = i*dt;
       pq.insert(new Event(time, EventType.FIRST_IN_TERMINAL, packetsize, i, null));
@@ -59,6 +59,7 @@ public class Sim2 {
     double deltat = t;
     boolean stop  = false;
     while (!pq.isEmpty() && (stop == false) ) { 
+
       Event e = pq.delMin();
       t = e.time;
       
