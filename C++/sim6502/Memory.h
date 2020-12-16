@@ -28,8 +28,19 @@ public:
     memcpy(mem + address, program.data(), program.size());
   }
 
+  void dump(uint16_t address, uint16_t bytes) {
+    for (int i = 0; i < bytes; i++) {
+      printf("0x%02x, ", mem[address + i]);
+    }
+    printf("\n");
+  }
+
   uint8_t readByte(uint16_t address) {
     return mem[address];
+  }
+
+void writeByte(uint16_t address, uint8_t value) {
+    mem[address] = value;
   }
 
   uint16_t readWord(uint16_t address) {

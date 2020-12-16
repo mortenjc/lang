@@ -31,10 +31,21 @@ public:
   void reset();
 
 
+  void printFlags() {
+    printf(" [%c%c%c%c%c%c%c] ",
+        Status.bits.C ? 'c' : ' ' ,
+        Status.bits.Z ? 'z' : ' ' ,
+        Status.bits.I ? 'i' : ' ' ,
+        Status.bits.D ? 'd' : ' ' ,
+        Status.bits.B ? 'b' : ' ' ,
+        Status.bits.O ? 'o' : ' ' ,
+        Status.bits.N ? 'n' : ' ' );
+  }
+
   uint8_t getInstruction();
 
   // This is where the action is
-  void handleInstruction(uint8_t instruction);
+  bool handleInstruction(uint8_t instruction);
 
   // Updates Zero and Negative flags based on value
   void updateStatus(uint8_t value) {

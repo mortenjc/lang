@@ -1,6 +1,15 @@
 
+#pragma once
 
-
-#include <map>
-
-std::map<> Insts
+#define CLC 0x18
+#define LDXI 0xA2
+#define LDYI 0xA0
+#define INX 0xE8
+#define INY 0xC8
+#define DEX 0xCA
+#define DEY 0x88
+#define BNE 0xD0
+#define LDAZP 0xA5
+#define ADCZP 0x65
+#define STAZP 0x85
+#define NOP 0xEA
