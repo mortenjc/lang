@@ -13,6 +13,5 @@ trace: trace.cpp
 unaligned: unaligned.cpp
 	g++ --std=c++11 $< -o $@
 
-
 clean:
 	rm -f $(PROGS) a.out

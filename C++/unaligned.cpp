@@ -1,36 +1,45 @@
 #include <iostream>
+#include <random>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 class RandomAccess {
 public:
-
   RandomAccess() {
+    Offsets.reserve(MAX_ITERATIONS);
+    Memory.reserve(MAX_MEMORY + 16);
+    MemoryOffset = &Memory[0];
     printf("Constructor\n");
   }
 
-  void generateOffsets(int iterations) {
+  void generateOffsets(int iterations, int maxjump) {
+    std::uniform_int_distribution<int> distribution(0, maxjump);
     if (iterations > MAX_ITERATIONS) {
       throw std::runtime_error("Number of iterations is too high");
     }
     for (int i = 0; i < iterations; i++) {
-      printf("i: %d\n", i);
-      Offsets[i] = 0;
+      int address = distribution(generator);
+      printf("i: %d, a: %d\n", i, address);
+      Offsets[i] = address;
     }
     Iterations = iterations;
   }
 
   void randomMemoryAccess() {
     for (int i = 0; i < Iterations; i++) {
-      uint32_t Value = *((uint32_t *)(Memory + Offsets[i]));
+      uint32_t Value = *((uint32_t *)(MemoryOffset + Offsets[i]));
     }
   }
 
 private:
+  std::default_random_engine generator;
+
   static const int MAX_ITERATIONS = 200000000;
   static const int MAX_MEMORY = 10000000;
-  uint16_t Offsets[MAX_ITERATIONS];
-  uint8_t Memory[MAX_MEMORY];
+  std::vector<uint16_t> Offsets;
+  std::vector<uint8_t> Memory;
+  uint8_t * MemoryOffset;
   int Iterations{0};
 };
 
@@ -46,6 +55,7 @@ int main(int argc, char * argv[]) {
   printf("Iterations %d, Maximum distance %d\n", Iterations, MaxJump);
 
   RandomAccess ra;
-  //ra.generateOffsets(Iterations);
-  //ra.randomMemoryAccess();
+  ra.generateOffsets(Iterations, MaxJump);
+
+  ra.randomMemoryAccess();
 }
