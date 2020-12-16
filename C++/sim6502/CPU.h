@@ -4,6 +4,7 @@
 
 #include <Memory.h>
 #include <cstdint>
+#include <string>
 
 
 class CPU {
@@ -57,6 +58,12 @@ public:
     if (value & 0x80) {
       Status.bits.N = 1;
     }
+  }
+
+  void updepri(uint8_t & val, std::string text) {
+    updateStatus(val);
+    debug();
+    printf("%s\n", text.c_str());
   }
 
   // print out registers and flags

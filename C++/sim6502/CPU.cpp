@@ -23,16 +23,36 @@ uint8_t CPU::getInstruction() {
 }
 
 bool CPU::handleInstruction(uint8_t instruction) {
-  int16_t pcinc{0};
+  int16_t pcinc{1};
 
   switch (instruction) {
 
     // CLEAR/SET flags
     case CLC: { // CLC - CLear Carry
       Status.bits.C = 0;
-      pcinc = 1;
       debug();
       printf("CLC\n");
+    }
+    break;
+
+    case SEC: { // Set Carry
+      Status.bits.C = 1;
+      debug();
+      printf("SEC\n");
+    }
+    break;
+
+    case CLD: { // CLear Decimal
+      Status.bits.D = 0;
+      debug();
+      printf("CLD\n");
+    }
+    break;
+
+    case SED: { // Set Decimal
+      Status.bits.D = 1;
+      debug();
+      printf("SED\n");
     }
     break;
 
@@ -67,12 +87,59 @@ bool CPU::handleInstruction(uint8_t instruction) {
     }
     break;
 
+    case LDXZP: { // LDX Zero Page
+      uint8_t zp = mem.readByte(PC + 1);
+      X = mem.readByte(zp);
+      updateStatus(X);
+      pcinc = 2;
+      debug();
+      printf("LDX (ZP 0x%02x) %d\n", zp, X);
+    }
+    break;
+
+    case LDYZP: { // LDY Zero Page
+      uint8_t zp = mem.readByte(PC + 1);
+      Y = mem.readByte(zp);
+      updateStatus(Y);
+      pcinc = 2;
+      debug();
+      printf("LDY (ZP 0x%02x) %d\n", zp, Y);
+    }
+    break;
+
     case STAZP: { // STA Zero Page
       uint8_t zp = mem.readByte(PC + 1);
       mem.writeByte(zp, A);
       pcinc = 2;
       debug();
       printf("STA (ZP 0x%02x) %d\n", zp, A);
+    }
+    break;
+
+    case STXZP: { // STX Zero Page
+      uint8_t zp = mem.readByte(PC + 1);
+      mem.writeByte(zp, X);
+      pcinc = 2;
+      debug();
+      printf("STX (ZP 0x%02x) %d\n", zp, X);
+    }
+    break;
+
+    case STXA: { // STX Absolute
+      uint16_t addr = mem.readWord(PC + 1);
+      mem.writeByte(addr, X);
+      pcinc = 3;
+      debug();
+      printf("STX (A 0x%04x) %d\n", addr, X);
+    }
+    break;
+
+    case STYA: { // STY Absolute
+      uint16_t addr = mem.readWord(PC + 1);
+      mem.writeByte(addr, Y);
+      pcinc = 3;
+      debug();
+      printf("STY (A 0x%04x) %d\n", addr, Y);
     }
     break;
 
@@ -97,42 +164,42 @@ bool CPU::handleInstruction(uint8_t instruction) {
     // INC and DEC
     case INX: { // INX
       X++;
-      updateStatus(X);
-      pcinc = 1;
-      debug();
-      printf("INX\n");
+      updepri(X, "INX");
     }
     break;
 
     case INY: { // INY
       Y++;
-      updateStatus(Y);
-      pcinc = 1;
+      updepri(Y, "INY");
+    }
+    break;
+
+    case INCA: { // INC memory absolute
+      uint16_t address = mem.readWord(PC + 1);
+      uint8_t val = mem.readByte(address);
+      val++;
+      mem.writeByte(address, val);
+      pcinc = 3;
+      updateStatus(val);
       debug();
-      printf("INY\n");
+      printf("INC (A 0x%04x) 0x%02x", address, val);
     }
     break;
 
     case DEX: { // DEX
       X--;
-      updateStatus(X);
-      pcinc = 1;
-      debug();
-      printf("DEX\n");
+      updepri(X, "DEX");
     }
     break;
 
     case DEY: { // DEY
       Y--;
-      updateStatus(Y);
-      pcinc = 1;
-      debug();
-      printf("DEY\n");
+      updepri(Y, "DEY");
     }
     break;
 
     // BRANCHES
-    case BNE: { // BNE - Branch if nor Zero
+    case BNE: { // BNE - Branch if not Zero
       uint8_t val = mem.readByte(PC + 1);
       if (Status.bits.Z != 1) {
           if (val & 0x80) {
@@ -148,9 +215,35 @@ bool CPU::handleInstruction(uint8_t instruction) {
     }
     break;
 
+    case BEQ: { // BEQ - Branch if Zero
+      uint8_t val = mem.readByte(PC + 1);
+      if (Status.bits.Z == 1) {
+          if (val & 0x80) {
+            pcinc = - (val - 0x80) + 1;
+          } else {
+            pcinc = val;
+          }
+      } else {
+        pcinc = 2;
+      }
+      debug();
+      printf("BEQ 0x%02x (%d)\n", val, pcinc);
+    }
+    break;
+
+    /// Logical
+    case ANDI: { // AND Immediate
+      uint8_t val = mem.readByte(PC + 1);
+      A = A & val;
+      updateStatus(A);
+      pcinc = 2;
+      debug();
+      printf("AND (I) 0x%02x\n", val);
+    }
+    break;
+
     /// MISC
     case NOP: { // No operation
-      pcinc = 1;
       debug();
       printf("NOP\n");
     }

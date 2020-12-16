@@ -9,8 +9,22 @@ protected:
    Memory mem;
    CPU * cpu;
 
+   // Helper for load instructions
+   void load(uint8_t opcode, uint8_t value, uint8_t & reg) {
+     mem.writeByte(0x1000, opcode);
+     mem.writeByte(0x1001, value);
+     cpu->PC = 0x1000;
+     uint8_t inst = cpu->getInstruction();
+     ASSERT_EQ(inst, opcode);
+     cpu->handleInstruction(inst);
+     ASSERT_EQ(value, reg);
+   }
+
    void SetUp( ) {
      mem.reset();
+     for (int i = 0; i < 256; i++) {
+       mem.writeByte(i, i);
+     }
      cpu = new CPU(mem);
      cpu->reset();
    }
@@ -18,8 +32,8 @@ protected:
    void TearDown( ) { }
 };
 
+
 TEST_F(CPUTest, INX) {
-  mem.reset();
   mem.writeByte(0x1000, INX);
   for (uint16_t i = 1; i < 256; i++) {
     cpu->PC = 0x1000;
@@ -44,8 +58,8 @@ TEST_F(CPUTest, INX) {
   ASSERT_EQ(cpu->Status.bits.Z, 1);
 }
 
+
 TEST_F(CPUTest, INY) {
-  mem.reset();
   mem.writeByte(0x1000, INY);
   for (uint16_t i = 1; i < 256; i++) {
     cpu->PC = 0x1000;
@@ -68,6 +82,85 @@ TEST_F(CPUTest, INY) {
   cpu->handleInstruction(inst);
   ASSERT_EQ(0, cpu->Y);
   ASSERT_EQ(cpu->Status.bits.Z, 1);
+}
+
+
+
+
+TEST_F(CPUTest, LOADI) {
+  load(LDXI, 0x42, cpu->X);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDXI, 0x00, cpu->X);
+  ASSERT_EQ(cpu->Status.bits.Z, 1);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDXI, 0x80, cpu->X);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 1);
+
+  load(LDYI, 0x42, cpu->Y);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDYI, 0x00, cpu->Y);
+  ASSERT_EQ(cpu->Status.bits.Z, 1);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDYI, 0x80, cpu->Y);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 1);
+}
+
+TEST_F(CPUTest, LOADZP) {
+  load(LDAZP, 0x42, cpu->A);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDAZP, 0x00, cpu->A);
+  ASSERT_EQ(cpu->Status.bits.Z, 1);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDAZP, 0x80, cpu->A);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 1);
+
+  load(LDXZP, 0x42, cpu->X);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDXZP, 0x00, cpu->X);
+  ASSERT_EQ(cpu->Status.bits.Z, 1);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  load(LDXZP, 0x80, cpu->X);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 1);
+}
+
+TEST_F(CPUTest, ANDI) {
+  mem.writeByte(0x1000, ANDI);
+  mem.writeByte(0x1001, 0xFF);
+  cpu->PC = 0x1000;
+  cpu->A = 0x7F;
+  uint8_t inst = cpu->getInstruction();
+  ASSERT_EQ(inst, ANDI);
+  cpu->handleInstruction(inst);
+  ASSERT_EQ(cpu->A, 0x7F);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 0);
+
+  mem.writeByte(0x1000, ANDI);
+  mem.writeByte(0x1001, 0xFF);
+  cpu->PC = 0x1000;
+  cpu->A = 0x80;
+  inst = cpu->getInstruction();
+  ASSERT_EQ(inst, ANDI);
+  cpu->handleInstruction(inst);
+  ASSERT_EQ(cpu->A, 0x80);
+  ASSERT_EQ(cpu->Status.bits.Z, 0);
+  ASSERT_EQ(cpu->Status.bits.N, 1);
 }
 
 int main(int argc, char **argv) {
