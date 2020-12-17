@@ -252,6 +252,15 @@ bool CPU::handleInstruction(uint8_t instruction) {
     }
     break;
 
+    case JMPA: { // Jump absolute
+      uint16_t addr = mem.readWord(PC + 1);
+      debug();
+      printf("JMP 0x%04x\n", addr);
+      PC = addr;
+      pcinc = 0;
+    }
+    break;
+
     /// Logical
     case ANDI: { // AND Immediate
       uint8_t val = mem.readByte(PC + 1);

@@ -6,6 +6,7 @@
 
 #define ANDI  0x29
 #define SEC   0x38
+#define JMPA  0x4C
 
 #define RTS   0x60
 #define ADCZP 0x65
