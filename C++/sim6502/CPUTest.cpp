@@ -163,6 +163,31 @@ TEST_F(CPUTest, ANDI) {
   ASSERT_EQ(cpu->Status.bits.N, 1);
 }
 
+TEST_F(CPUTest, JSR) {
+  ASSERT_EQ(cpu->SP, 0x1FF);
+  mem.writeByte(0x1000, JSR);
+  mem.writeByte(0x1001, 0x00);
+  mem.writeByte(0x1002, 0x20);
+  mem.writeByte(0x1003, NOP);
+  mem.writeByte(0x2000, RTS);
+  cpu->PC = 0x1000;
+  uint8_t inst = cpu->getInstruction();
+  ASSERT_EQ(inst, JSR);
+  cpu->handleInstruction(inst);
+  ASSERT_EQ(cpu->SP, 0x1FD);
+  ASSERT_EQ(cpu->PC, 0x2000);
+
+  inst = cpu->getInstruction();
+  ASSERT_EQ(inst, RTS);
+  cpu->handleInstruction(inst);
+  ASSERT_EQ(cpu->SP, 0x1FF);
+  ASSERT_EQ(cpu->PC, 0x1003);
+
+  inst = cpu->getInstruction();
+  ASSERT_EQ(inst, NOP);
+  cpu->handleInstruction(inst);
+}
+
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

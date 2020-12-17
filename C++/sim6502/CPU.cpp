@@ -13,8 +13,8 @@ void CPU::reset() {
 }
 
 void CPU::debug() {
-  printf("0x%04x: A(%3d)  X(%3d)  Y(%3d) ",
-    PC, A, X, Y);
+  printf("0x%04x(%03x): A(%3d)  X(%3d)  Y(%3d) ",
+    PC, SP, A, X, Y);
   printFlags();
 }
 
@@ -228,6 +228,27 @@ bool CPU::handleInstruction(uint8_t instruction) {
       }
       debug();
       printf("BEQ 0x%02x (%d)\n", val, pcinc);
+    }
+    break;
+
+    case RTS: { // Return from Subroutine
+      uint16_t newaddr = mem.readWord(SP) + 1;
+      SP += 2;
+      pcinc = 0;
+      debug();
+      printf("RTS\n");
+      PC = newaddr;
+    }
+    break;
+
+    case JSR: { // Jump to Subroutine
+      uint16_t addr = mem.readWord(PC + 1);
+      SP -= 2;
+      mem.writeWord(SP, (PC + 2));
+      debug();
+      printf("JSR 0x%04x\n", addr);
+      PC = addr;
+      pcinc = 0;
     }
     break;
 

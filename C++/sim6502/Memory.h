@@ -39,12 +39,18 @@ public:
     return mem[address];
   }
 
-void writeByte(uint16_t address, uint8_t value) {
+  void writeByte(uint16_t address, uint8_t value) {
     mem[address] = value;
   }
 
   uint16_t readWord(uint16_t address) {
     assert(address < 0xFFFF);
     return mem[address] + mem[address + 1] * 256;
+  }
+
+  void writeWord(uint16_t address, uint16_t value) {
+    assert(address < 0xFFFF);
+    mem[address] = value & 0xFF;
+    mem[address + 1] = value >> 8;
   }
 };
